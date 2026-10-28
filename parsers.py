@@ -30,6 +30,8 @@ def parse_ipv4(data):
     header_length = (ver_ihl & 0x0F) * 4
     if version != 4:
         raise ValueError(f"not an IPv4 packet (version {version})")
+    if header_length < 20:
+        raise ValueError(f"invalid IPv4 header length ({header_length} bytes)")
 
     ip = {
         "version": version,
@@ -56,6 +58,8 @@ def parse_tcp(data):
      window, checksum, urgent) = struct.unpack('!HHLLHHHH', data[:20])
 
     header_length = (offset_flags >> 12) * 4
+    if header_length < 20 or header_length > len(data):
+        raise ValueError(f"invalid TCP header length ({header_length} bytes)")
     flag_bits = offset_flags & 0x1FF
     flags = [name for bit, name in TCP_FLAGS.items() if flag_bits & bit]
 

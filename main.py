@@ -21,12 +21,19 @@ Commands:
   q                 quit"""
 
 
+def positive_int(value):
+    """argparse type: an integer of at least 1."""
+    if not value.isdigit() or int(value) < 1:
+        raise argparse.ArgumentTypeError(f"must be a positive number, got '{value}'")
+    return int(value)
+
+
 def build_arg_parser():
     """Define CLI options: packet count and filters."""
     parser = argparse.ArgumentParser(
         description="Mini Packet Analyzer: capture IPv4 packets and decode their IP, TCP and UDP headers. "
                     "Must be run as Administrator.")
-    parser.add_argument("-c", "--count", type=int, default=None,
+    parser.add_argument("-c", "--count", type=positive_int, default=None,
                         help="number of packets to capture (default: until Ctrl+C)")
 
     filters = parser.add_argument_group("filters")
