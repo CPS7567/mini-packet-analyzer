@@ -27,7 +27,9 @@ def parse_ipv4(data):
      ttl, protocol, checksum, src, dst) = struct.unpack('!BBHHHBBH4s4s', data[:20])
 
     version = ver_ihl >> 4                 
-    header_length = (ver_ihl & 0x0F) * 4   
+    header_length = (ver_ihl & 0x0F) * 4
+    if version != 4:
+        raise ValueError(f"not an IPv4 packet (version {version})")
 
     ip = {
         "version": version,

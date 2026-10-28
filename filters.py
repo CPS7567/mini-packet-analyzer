@@ -8,7 +8,11 @@ def _to_network(value):
 
 
 def _to_port(value):
-    return int(value) if value is not None else None
+    if value is None:
+        return None
+    if not str(value).isdigit() or not 0 <= int(value) <= 65535:
+        raise ValueError(f"port must be a number from 0 to 65535, got '{value}'")
+    return int(value)
 
 
 def filter_packets(packets, proto=None, ip=None, src_ip=None, dst_ip=None,
